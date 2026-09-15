@@ -33,16 +33,18 @@ This Claude Code skill generates high-quality, tailored resumes optimized for sp
 
 ### Option 1: Install from GitHub (Recommended)
 
-1. **Clone the repository:**
+1. **Clone the repository and copy the skill directory into place:**
    ```bash
-   git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+   git clone https://github.com/varunr89/resume-tailoring-skill.git /tmp/resume-tailoring-skill
+   cp -r /tmp/resume-tailoring-skill/skills/resume-tailoring ~/.claude/skills/resume-tailoring
    ```
+   (The repo also ships a `.claude-plugin/plugin.json`, so it can alternatively be added as a Claude Code plugin marketplace source if you prefer that flow.)
 
 2. **Verify installation:**
    ```bash
    ls ~/.claude/skills/resume-tailoring
    ```
-   You should see: `SKILL.md`, `research-prompts.md`, `matching-strategies.md`, `branching-questions.md`, `README.md`
+   You should see: `SKILL.md`, `research-prompts.md`, `matching-strategies.md`, `branching-questions.md`, `multi-job-workflow.md`
 
 3. **Restart Claude Code** (if already running)
 
@@ -54,8 +56,8 @@ This Claude Code skill generates high-quality, tailored resumes optimized for sp
    ```
 
 2. **Download the files:**
-   - Download all files from this repository
-   - Place them in `~/.claude/skills/resume-tailoring/`
+   - Download all files from this repository's `skills/resume-tailoring/` directory
+   - Place them directly in `~/.claude/skills/resume-tailoring/` (not in a nested subfolder)
 
 3. **Verify installation:**
    - Open Claude Code
@@ -134,7 +136,7 @@ Add your existing resumes in markdown format:
 
 ## Files
 
-### Core Implementation
+### Core Implementation (`skills/resume-tailoring/`)
 - `SKILL.md` - Main skill implementation with single-job and multi-job workflows
 - `multi-job-workflow.md` - Complete multi-job batch processing workflow
 - `research-prompts.md` - Company/role research templates

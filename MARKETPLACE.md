@@ -32,8 +32,11 @@ Transform your job search with AI-powered resume tailoring that goes beyond simp
 ## Installation
 
 ```bash
-git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+git clone https://github.com/varunr89/resume-tailoring-skill.git /tmp/resume-tailoring-skill
+cp -r /tmp/resume-tailoring-skill/skills/resume-tailoring ~/.claude/skills/resume-tailoring
 ```
+
+(The repo also ships a `.claude-plugin/plugin.json`, so it can alternatively be added as a Claude Code plugin marketplace source.)
 
 ## Usage
 

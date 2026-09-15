@@ -23,7 +23,8 @@
 
 **Installation Command:**
 ```bash
-git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+git clone https://github.com/varunr89/resume-tailoring-skill.git /tmp/resume-tailoring-skill
+cp -r /tmp/resume-tailoring-skill/skills/resume-tailoring ~/.claude/skills/resume-tailoring
 ```
 
 **Category:** Productivity / Career Development
@@ -130,7 +131,8 @@ The skill will automatically:
 Once approved, users can install your skill with:
 
 ```bash
-git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+git clone https://github.com/varunr89/resume-tailoring-skill.git /tmp/resume-tailoring-skill
+cp -r /tmp/resume-tailoring-skill/skills/resume-tailoring ~/.claude/skills/resume-tailoring
 ```
 
 Or through the Claude Code skills marketplace interface.
