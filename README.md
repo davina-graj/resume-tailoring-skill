@@ -90,6 +90,18 @@ Add your existing resumes in markdown format:
 └── Resume_General_2024.md
 ```
 
+**Optional: a master/brag document.** If you'd rather keep one big running
+file of every bullet and experience you have — instead of (or alongside)
+separate finished resumes — drop it in as `resumes/master.md` (or
+`master-resume.md`/`brag-document.md`/`brag-doc.md`, or just tell Claude
+where it is). It doesn't need to look like a resume: loose headings with
+rough, unfinished, or multiple-attempts-at-the-same-bullet notes underneath
+are fine. Since the library rebuilds fresh every run, you can keep adding
+to it over time and every future tailoring run automatically picks up
+whatever's new — no re-setup needed. The skill polishes rough entries
+(missing metrics/weak verbs) more aggressively than it would an
+already-tailored resume.
+
 ## Quick Start
 
 ### Single Job Application

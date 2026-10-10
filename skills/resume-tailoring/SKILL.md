@@ -41,6 +41,9 @@ Use this skill when:
 **Optional:**
 3. A reference `.docx` whose visual formatting (fonts, margins, heading/
    bullet styles) should be mimicked in the output — see Phase 4.2a
+4. A master/brag document — one big running file of experience and bullets
+   (doesn't need to look like a finished resume, can be a work in
+   progress) — see Phase 0 Step 1a
 
 **Workflow:**
 1. Build library from existing resumes
@@ -180,11 +183,56 @@ When multi-job mode is activated, see `multi-job-workflow.md` for complete workf
    Validate directory exists
    ```
 
+1a. **Master/brag document detection (optional):**
+
+   A master document is one big running file of experience and bullets —
+   it does not need to look like a finished resume, and it's expected to
+   be a work in progress that grows over time. Since Phase 0 always runs
+   fresh, each run automatically picks up whatever's been added since last
+   time — no re-registration needed as the user keeps writing it.
+
+   ```
+   Detect it by:
+   - User names a path explicitly ("my master doc is at resumes/master.md"), OR
+   - A conventional filename exists in the resume directory:
+     master.md, master-resume.md, brag-document.md, brag-doc.md
+   If none found and user hasn't mentioned one, skip silently -
+   this is purely optional, don't ask for one unprompted.
+   ```
+
+   **Parse it more tolerantly than a normal resume** (step 3 below assumes
+   resume-shaped structure; a brag doc usually isn't):
+   - Treat any `##`/`###` heading as a role/project/context label for the
+     bullets under it; bullets with no preceding heading go under an
+     "Uncategorized" bucket rather than being dropped.
+   - Treat any line starting with `-`, `*`, or `•` as a candidate bullet,
+     even if rough/unfinished, missing metrics, or written as a sentence
+     fragment/note-to-self rather than resume phrasing.
+   - Multiple bullets describing the same underlying achievement (common
+     in a brag doc — e.g. several attempts at phrasing one win) are all
+     kept as separate candidates for Phase 3 matching to choose between,
+     not deduplicated away.
+   - Tag each master-doc bullet `source: "master_document"` (vs
+     `source: "{filename}"` for normal library resumes) and
+     `needs_polish: true` if it lacks a strong opening verb or a metric —
+     Phase 4.1's action-verb alignment (`action-verbs.md`) and
+     matching-strategies.md Strategy 5 should be applied more assertively
+     to these than to bullets pulled from an already-polished resume.
+   - If a master-doc bullet is near-duplicate text of one already present
+     in a regular resume file, keep only the resume-file version (it's
+     presumably the more refined phrasing) and skip the master-doc copy.
+
+   Fold the result into the same `library["roles"]` structure as step 4
+   below — master-doc bullets are matched in Phase 3 exactly like any
+   other library bullet, just with richer provenance/polish metadata.
+
 2. **Scan for markdown files:**
    ```
    Use Glob tool: pattern="*.md" path={resume_directory}
-   Count files found
-   Announce: "Building resume library... found {N} resumes"
+   Count files found (exclude the master/brag doc from this count if one
+   was detected in 1a - report it separately)
+   Announce: "Building resume library... found {N} resumes" (+
+   ", {M} bullets from master document" if one was found)
    ```
 
 3. **Parse each resume:**
@@ -209,7 +257,18 @@ When multi-job mode is activated, see `multi-job-workflow.md` for complete workf
              "themes": ["leadership", "technical"],
              "metrics": ["17x improvement", "$3M revenue"],
              "keywords": ["cross-functional", "program"],
-             "source_resumes": ["resume1.md"]
+             "source_resumes": ["resume1.md"],
+             "source": "resume1.md",
+             "needs_polish": false
+           },
+           {
+             "text": "rough bullet pulled from the brag doc, no metric yet",
+             "themes": ["technical"],
+             "metrics": [],
+             "keywords": ["..."],
+             "source_resumes": [],
+             "source": "master_document",
+             "needs_polish": true
            }
          ]
        }
@@ -232,6 +291,9 @@ When multi-job mode is activated, see `multi-job-workflow.md` for complete workf
    - Themes: Scan for keywords (leadership, technical, analytics, etc.)
    - Metrics: Extract numbers, percentages, dollar amounts
    - Keywords: Frequent technical terms, action verbs
+   - `needs_polish`: true if no metric was found AND no verb from
+     `action-verbs.md` opens the bullet (typical of fresh master-doc
+     entries); false otherwise
 
 **Output:** In-memory database ready for matching
 
