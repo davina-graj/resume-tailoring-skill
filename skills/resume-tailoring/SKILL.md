@@ -20,6 +20,12 @@ Use this skill when:
 - User has multiple existing resumes in markdown format
 - User wants to optimize their application for a specific role/company
 - User needs help surfacing and articulating undocumented experiences
+- User says **"it's go time"** — triggers the Internship Hunt workflow (see
+  `internship-hunt-workflow.md`): fetch today's ("0d") US-based postings
+  from the SimplifyJobs Summer2027-Internships repo and tailor a resume for
+  each match. Also runnable unattended on a schedule (e.g. daily 3pm) — see
+  that file's "Scheduling the daily run" section for the external OS-level
+  setup this requires.
 
 **DO NOT use for:**
 - Generic resume writing from scratch (user needs existing resume library)
@@ -47,6 +53,8 @@ See supporting files:
 - `research-prompts.md` - Structured prompts for company/role research
 - `matching-strategies.md` - Content matching algorithms and scoring
 - `branching-questions.md` - Experience discovery conversation patterns
+- `multi-job-workflow.md` - Multi-job batch processing workflow
+- `internship-hunt-workflow.md` - "It's go time" / scheduled daily internship-sourcing workflow
 
 ## Workflow Details
 

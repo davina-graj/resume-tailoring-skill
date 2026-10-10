@@ -139,6 +139,7 @@ Add your existing resumes in markdown format:
 ### Core Implementation (`skills/resume-tailoring/`)
 - `SKILL.md` - Main skill implementation with single-job and multi-job workflows
 - `multi-job-workflow.md` - Complete multi-job batch processing workflow
+- `internship-hunt-workflow.md` - "It's go time" workflow: sources today's US internship postings from the SimplifyJobs Summer2027-Internships repo and tailors a resume for each
 - `research-prompts.md` - Company/role research templates
 - `matching-strategies.md` - Content scoring algorithms
 - `branching-questions.md` - Experience discovery patterns
