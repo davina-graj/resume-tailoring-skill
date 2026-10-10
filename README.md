@@ -143,6 +143,8 @@ Add your existing resumes in markdown format:
 - `research-prompts.md` - Company/role research templates
 - `matching-strategies.md` - Content scoring algorithms
 - `branching-questions.md` - Experience discovery patterns
+- `action-verbs.md` - Georgia Tech action verb bank used for bullet writing
+- `templates/gatech-cs-resume-template.docx` - Bundled default DOCX template (formatting mimicked when no other reference is given)
 
 ### Documentation
 - `README.md` - This file

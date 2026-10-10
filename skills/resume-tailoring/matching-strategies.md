@@ -115,6 +115,23 @@ After:  "Led cross-functional initiative coordinating 3 organizational units"
 Reason: Emphasize cross-org complexity over headcount
 ```
 
+**Strategy 5: Action Verb Alignment**
+```
+Open with the verb that precisely matches the real action, from
+action-verbs.md's category list (Technical Development & Programming,
+Design & Architecture, Collaboration & Communication, Leadership &
+Initiative, Impact & Results)
+
+Before: "Was responsible for the ingestion pipeline and made it faster"
+After:  "Refactored the ingestion pipeline, reducing latency by 40%"
+Reason: Opening verb (Technical) + outcome verb (Impact & Results) >
+        a vague "was responsible for"
+
+Applies whenever a bullet's opening verb is generic (made, did, worked on,
+helped with, was responsible for) or already-used elsewhere in the same
+resume. See action-verbs.md for the full list and how to pick the category.
+```
+
 ## Gap Handling
 
 **When match confidence < 60%:**

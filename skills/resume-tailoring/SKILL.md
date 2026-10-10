@@ -59,6 +59,8 @@ See supporting files:
 - `branching-questions.md` - Experience discovery conversation patterns
 - `multi-job-workflow.md` - Multi-job batch processing workflow
 - `internship-hunt-workflow.md` - "It's go time" / scheduled daily internship-sourcing workflow
+- `action-verbs.md` - Georgia Tech action verb bank for bullet writing (see Phase 4.1, matching-strategies.md Strategy 5)
+- `templates/gatech-cs-resume-template.docx` - Bundled default reference template for formatting mimicry (Phase 4.2a)
 
 ## Workflow Details
 
@@ -754,6 +756,11 @@ Wait for user approval before generation.
 - Section ordering
 - Typical length (1-page vs 2-page)
 
+**Bullet verbs:** open each bullet with a verb from `action-verbs.md`,
+matched by category to what the bullet is actually about (see
+matching-strategies.md Strategy 5). Don't repeat the same verb across
+bullets in one resume.
+
 **Output:** `{Name}_{Company}_{Role}_Resume.md`
 
 **4.2 DOCX Generation:**
@@ -784,7 +791,36 @@ See docx skill documentation for:
 **4.2a Formatting Mimicry (Optional — Match an Existing DOCX's Style):**
 
 **Triggers when the user supplies a reference `.docx`** (e.g. "make it look
-like my old resume at `~/resumes/old/Resume_2024.docx`").
+like my old resume at `~/resumes/old/Resume_2024.docx`"), **or by default**
+when no reference is given and no other preference is stated — fall back to
+the bundled `templates/gatech-cs-resume-template.docx` (the Georgia Tech
+Career Center CS/technical resume template) rather than the generic 4.2
+defaults, since it's a more proven starting point than inventing a layout.
+
+**Known structure of the bundled GT template** (use this directly instead of
+re-deriving it by inspection every time this specific file is the
+reference):
+- Letter page, margins ≈0.6" left/right, ≈0.4" top/bottom
+- Name header: 16pt bold, "Normal" style; contact line: 10pt, "Normal" style
+- Body sections (EDUCATION, TECHNICAL SKILLS, WORK EXPERIENCE, PROGRAMMING
+  PROJECTS, LEADERSHIP AND COMMUNITY ENGAGEMENT, ADDITIONAL SKILLS AND
+  INTERESTS): 10pt Calibri via the "No Spacing" style (no space before/
+  after, single line spacing) — section headers are bold caps in that same
+  style, not a separate Heading style
+- Job/project title lines pack the org+role on the left and the date range
+  on the right using a run of raw tab characters, not a defined right-
+  aligned tab stop. That's fragile across content-length changes — when
+  generating new content with this template, replace the raw-tab hack with
+  one proper right-aligned tab stop at the page's writable width (page
+  width − left/right margins) instead of copying the exact tab count; it
+  renders the same but won't drift when the left-side text is longer/
+  shorter than the original
+- Bullets are literal `•` characters typed inline with manual space
+  indentation for wrapped continuation lines (not Word's native numbering/
+  List Bullet style) — preserve this convention when mimicking this
+  specific template, even though it contradicts the generic 4.2 guidance
+  to avoid unicode bullets; mimicry (4.2a) always takes precedence over the
+  generic default (4.2) once a reference template is in play
 
 Instead of building a document from the hardcoded defaults in 4.2, clone the
 reference file's formatting:
@@ -807,9 +843,12 @@ reference file's formatting:
    style+run-formatting the reference file's job titles had).
 5. Save as the normal `{Name}_{Company}_{Role}_Resume.docx` output.
 
-**If no reference `.docx` is supplied,** fall back to the hardcoded style in
-4.2 — don't ask for one unless the user has already indicated they care
-about matching a specific look.
+**If no reference `.docx` is supplied and the user hasn't said they want a
+different look,** use the bundled `templates/gatech-cs-resume-template.docx`
+as the reference via the same clone process above, rather than the generic
+4.2 defaults. Only fall through to the plain 4.2 defaults if the bundled
+template is unreadable/missing. Don't ask the user to pick a template
+unless they've indicated they care about a specific look.
 
 **Note:** a reference file only works as a *style* source, not a *content*
 source — it is not scanned into the resume library in Phase 0 (library
