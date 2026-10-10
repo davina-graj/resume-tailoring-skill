@@ -38,6 +38,10 @@ Use this skill when:
 1. Job description (text or URL)
 2. Resume library location (defaults to `resumes/` in current directory)
 
+**Optional:**
+3. A reference `.docx` whose visual formatting (fonts, margins, heading/
+   bullet styles) should be mimicked in the output — see Phase 4.2a
+
 **Workflow:**
 1. Build library from existing resumes
 2. Research company/role
@@ -776,6 +780,42 @@ See docx skill documentation for:
 ```
 
 **Output:** `{Name}_{Company}_{Role}_Resume.docx`
+
+**4.2a Formatting Mimicry (Optional — Match an Existing DOCX's Style):**
+
+**Triggers when the user supplies a reference `.docx`** (e.g. "make it look
+like my old resume at `~/resumes/old/Resume_2024.docx`").
+
+Instead of building a document from the hardcoded defaults in 4.2, clone the
+reference file's formatting:
+
+1. Open the reference `.docx` with `python-docx` (`Document(reference_path)`).
+   This preserves, untouched: page setup/margins (`section.page_width`,
+   `page_height`, margins), the style definitions (`Normal`, heading levels,
+   `List Bullet`, etc. — fonts, sizes, colors, spacing all live here), and
+   any header/footer content.
+2. Identify which named style the reference file actually used for each
+   resume section (name/contact line, section headings, job titles, bullet
+   points) by inspecting each paragraph's `paragraph.style.name` and the
+   run-level overrides (`run.font.name/size/bold/color`) — some resumes
+   apply direct run formatting instead of named styles; capture both.
+3. Delete the reference file's body paragraphs (`for p in list(doc.paragraphs): p._element.getparent().remove(p._element)`),
+   leaving the style/section definitions intact.
+4. Rebuild the tailored content from Phase 3's approved mapping into that
+   now-empty document, applying the styles/run-overrides captured in step 2
+   to the matching section type (e.g. job-title paragraphs get whatever
+   style+run-formatting the reference file's job titles had).
+5. Save as the normal `{Name}_{Company}_{Role}_Resume.docx` output.
+
+**If no reference `.docx` is supplied,** fall back to the hardcoded style in
+4.2 — don't ask for one unless the user has already indicated they care
+about matching a specific look.
+
+**Note:** a reference file only works as a *style* source, not a *content*
+source — it is not scanned into the resume library in Phase 0 (library
+scanning is markdown-only). If the user's "nicely formatted" resume only
+exists as a `.docx` and they also want its *content* available for
+matching, convert it to markdown and add it to `resumes/` separately.
 
 **4.3 PDF Generation (Optional):**
 
