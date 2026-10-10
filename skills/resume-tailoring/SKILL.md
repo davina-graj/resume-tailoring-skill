@@ -48,7 +48,7 @@ Use this skill when:
 3. Create template (with user checkpoint)
 4. Optional: Branching experience discovery
 5. Match content with confidence scoring
-6. Generate MD + DOCX + PDF + Report
+6. Generate MD + TEX/PDF + DOCX + Report
 7. User review → Optional library update
 
 ## Implementation
@@ -60,7 +60,8 @@ See supporting files:
 - `multi-job-workflow.md` - Multi-job batch processing workflow
 - `internship-hunt-workflow.md` - "It's go time" / scheduled daily internship-sourcing workflow
 - `action-verbs.md` - Georgia Tech action verb bank for bullet writing (see Phase 4.1, matching-strategies.md Strategy 5)
-- `templates/gatech-cs-resume-template.docx` - Bundled default reference template for formatting mimicry (Phase 4.2a)
+- `templates/jakes-resume-template.tex` - Default LaTeX template ("Jake's Resume") for Phase 4.1b; also the default DOCX layout in Phase 4.2
+- `templates/gatech-cs-resume-template.docx` - Named-alternative DOCX reference template (Phase 4.2a) when the GT Career Center look is requested specifically
 
 ## Workflow Details
 
@@ -146,7 +147,7 @@ When multi-job mode is activated, see `multi-job-workflow.md` for complete workf
 │   ├─ Research (company + role benchmarking)                 │
 │   ├─ Template generation                                    │
 │   ├─ Content matching (uses enriched library)              │
-│   └─ Generation (MD + DOCX + Report)                        │
+│   └─ Generation (MD + TEX/PDF + DOCX)                       │
 │ Interactive or Express mode                                 │
 └─────────────────────────────────────────────────────────────┘
                            ↓
@@ -763,20 +764,68 @@ bullets in one resume.
 
 **Output:** `{Name}_{Company}_{Role}_Resume.md`
 
+**4.1b LaTeX Generation (Primary Template — Jake's Resume):**
+
+**Default template, no reference needed:** `templates/jakes-resume-template.tex`
+is "Jake's Resume" — the de facto standard CS/SWE resume template. Use it as
+the default `.tex` output unless the user has asked for a different LaTeX
+template by name.
+
+Process:
+1. Copy `templates/jakes-resume-template.tex` as the starting point.
+2. Replace the placeholder header (name, phone, email, LinkedIn, GitHub)
+   with the user's real contact info.
+3. Rebuild `\section{Education}`, `\section{Experience}`,
+   `\section{Technical Skills}` (and any further sections the template's
+   macros support, e.g. Projects/Leadership using the same
+   `\resumeSubheading`/`\resumeItem` pattern) from Phase 3's approved
+   content mapping — one `\resumeSubheading{Org}{Location}{Title}{Dates}`
+   block per role/project, with `\resumeItem{...}` bullets inside
+   `\resumeItemListStart`/`\resumeItemListEnd`. Apply the same action-verb
+   bullet guidance as 4.1 (`action-verbs.md`).
+4. **Escape LaTeX special characters** in every piece of dynamic content
+   before inserting it — `&`, `%`, `$`, `#`, `_`, `{`, `}`, `~`, `^`, and
+   backslash all need escaping (e.g. `AT&T` → `AT\&T`, `C++` stays as-is but
+   `C#` → `C\#`). Unescaped special characters are the most common reason a
+   generated `.tex` fails to compile.
+5. Save as `{Name}_{Company}_{Role}_Resume.tex` — **this file is the
+   user's to edit afterward** in any text editor or Overleaf; it's not a
+   throwaway intermediate.
+6. **Compile to PDF** if a LaTeX toolchain is available
+   (`pdflatex`/`xelatex`/`tectonic` on PATH — run it twice if the template
+   used cross-references, not needed for this template's content but
+   harmless). If no toolchain is available locally, skip compilation,
+   still deliver the `.tex`, and tell the user they can compile it at
+   https://overleaf.com (upload the file) or install a local LaTeX
+   distribution (TeX Live / MacTeX / MiKTeX).
+
+**Output:** `{Name}_{Company}_{Role}_Resume.tex` (+ `.pdf` if compiled)
+
 **4.2 DOCX Generation:**
 
-**Use document-skills:docx:**
+**Use document-skills:docx, built independently from the `.tex` (don't
+convert the `.tex` — Jake's template's custom macros don't survive a
+LaTeX→DOCX converter like Pandoc; recreate the same layout natively in
+python-docx/document-skills instead):**
 
 ```
 REQUIRED SUB-SKILL: Use document-skills:docx
 
-Create Word document with:
-- Professional fonts (Calibri 11pt body, 12pt headers)
-- Proper spacing (single within sections, space between)
-- Clean bullet formatting (proper numbering config, NOT unicode)
-- Header with contact information
-- Appropriate margins (0.5-1 inch)
-- Bold/italic emphasis (company names, titles, dates)
+Create Word document matching Jake's Resume layout by default:
+- Centered bold name header (large, small-caps), contact line below it
+  with " | " separators (phone, email, LinkedIn, GitHub)
+- Section headings: small-caps, left-aligned, with a horizontal rule
+  underneath (Word border-bottom on the paragraph, not a literal line of
+  underscores)
+- Each role/project as one line with org+title bold-left /
+  location+dates right (use a right-aligned tab stop at the page's
+  writable width, or a borderless 2-column table, to get the same
+  left/right split as the tex template's tabular* trick)
+- Bullets: Word's native bullet list style, compact spacing (little to no
+  space before/after paragraphs, matching the tex template's tightened
+  \vspace)
+- Calibri or similar, 10.5-11pt body, margins ~0.5in all around (matching
+  the tex template's -0.5in margin adjustment on letter paper)
 - Page breaks if 2-page resume
 
 See docx skill documentation for:
@@ -791,11 +840,14 @@ See docx skill documentation for:
 **4.2a Formatting Mimicry (Optional — Match an Existing DOCX's Style):**
 
 **Triggers when the user supplies a reference `.docx`** (e.g. "make it look
-like my old resume at `~/resumes/old/Resume_2024.docx`"), **or by default**
-when no reference is given and no other preference is stated — fall back to
-the bundled `templates/gatech-cs-resume-template.docx` (the Georgia Tech
-Career Center CS/technical resume template) rather than the generic 4.2
-defaults, since it's a more proven starting point than inventing a layout.
+like my old resume at `~/resumes/old/Resume_2024.docx`"). Otherwise the
+DOCX default is Jake's Resume layout, built per 4.2 above — not this
+section.
+
+**Named alternative — Georgia Tech CS template:** if the user asks for the
+GT Career Center look specifically (not the default), use the bundled
+`templates/gatech-cs-resume-template.docx` as the reference via the clone
+process below instead of Jake's layout.
 
 **Known structure of the bundled GT template** (use this directly instead of
 re-deriving it by inspection every time this specific file is the
@@ -843,11 +895,9 @@ reference file's formatting:
    style+run-formatting the reference file's job titles had).
 5. Save as the normal `{Name}_{Company}_{Role}_Resume.docx` output.
 
-**If no reference `.docx` is supplied and the user hasn't said they want a
-different look,** use the bundled `templates/gatech-cs-resume-template.docx`
-as the reference via the same clone process above, rather than the generic
-4.2 defaults. Only fall through to the plain 4.2 defaults if the bundled
-template is unreadable/missing. Don't ask the user to pick a template
+**If no reference `.docx` is supplied and the user hasn't asked for a named
+alternative,** use the Jake's-layout default from 4.2 — don't apply this
+section's clone process at all. Don't ask the user to pick a template
 unless they've indicated they care about a specific look.
 
 **Note:** a reference file only works as a *style* source, not a *content*
@@ -858,10 +908,13 @@ matching, convert it to markdown and add it to `resumes/` separately.
 
 **4.3 PDF Generation (Optional):**
 
-**If user requests PDF:**
+**If the `.tex` compiled successfully in 4.1b, that PDF is the deliverable
+PDF** — don't regenerate it from the DOCX, the compiled LaTeX is the exact
+Jake's-template look. Only fall back to DOCX→PDF conversion if no LaTeX
+toolchain was available to compile the `.tex`:
 
 ```
-OPTIONAL SUB-SKILL: Use document-skills:pdf
+OPTIONAL SUB-SKILL (fallback only): Use document-skills:pdf
 
 Convert DOCX to PDF OR generate directly
 Ensure formatting preservation
@@ -1233,7 +1286,7 @@ SKILL:
 3. Template: Features PM2 Azure Eng Systems role (most relevant)
 4. Discovery: Surfaces VS Code extension, Bhavana AI side project
 5. Assembly: 92% JD coverage, 75% direct matches
-6. Generate: MD + DOCX + Report
+6. Generate: MD + TEX/PDF + DOCX + Report
 7. User approves → Library updated with new resume + 6 discovered experiences
 
 RESULT: Highly competitive application leveraging internal experience
@@ -1389,7 +1442,7 @@ PASS CRITERIA:
 
 **Test 6: Multi-format Generation**
 ```
-- Generate MD, DOCX, PDF, Report
+- Generate MD, TEX/PDF, DOCX, Report
 - Verify formatting consistency
 PASS CRITERIA:
 - All formats readable

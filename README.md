@@ -26,7 +26,7 @@ This Claude Code skill generates high-quality, tailored resumes optimized for sp
 - **Deep Research:** Analyzes company culture, role requirements, and success profiles
 - **Experience Discovery:** Surfaces undocumented experiences through conversational branching interviews
 - **Smart Matching:** Uses confidence-scored content selection with transparent gap identification
-- **Multi-Format Output:** Generates professional MD, DOCX, PDF, and interview prep reports
+- **Multi-Format Output:** Generates professional MD, editable LaTeX + compiled PDF, DOCX, and interview prep reports
 - **Self-Improving:** Library grows with each successful resume
 
 ## Installation
@@ -104,7 +104,7 @@ Add your existing resumes in markdown format:
 3. Create optimized template (with checkpoint)
 4. Offer branching experience discovery
 5. Match content with confidence scores (with checkpoint)
-6. Generate MD + DOCX + PDF + Report
+6. Generate MD + TEX/PDF + DOCX + Report
 7. Optionally update library
 
 **3. Review and approve:**
@@ -144,7 +144,8 @@ Add your existing resumes in markdown format:
 - `matching-strategies.md` - Content scoring algorithms
 - `branching-questions.md` - Experience discovery patterns
 - `action-verbs.md` - Georgia Tech action verb bank used for bullet writing
-- `templates/gatech-cs-resume-template.docx` - Bundled default DOCX template (formatting mimicked when no other reference is given)
+- `templates/jakes-resume-template.tex` - Default template ("Jake's Resume") used for LaTeX/PDF output and as the default DOCX layout
+- `templates/gatech-cs-resume-template.docx` - Named-alternative DOCX template (used when the GT Career Center look is requested specifically)
 
 ### Documentation
 - `README.md` - This file
@@ -188,8 +189,8 @@ Add your existing resumes in markdown format:
 
 **📄 Multi-Format Output**
 - Professional markdown
-- ATS-friendly DOCX
-- Print-ready PDF
+- Editable LaTeX (Jake's Resume template by default) + compiled PDF
+- ATS-friendly DOCX, matching the same default layout
 - Interview prep report
 
 **🔄 Self-Improving**
@@ -211,7 +212,7 @@ Phase 2.5: Experience Discovery (Optional, Branching)
    ↓
 Phase 3: Assembly (Matching + Scoring)
    ↓  [CHECKPOINT]
-Phase 4: Generation (MD + DOCX + PDF + Report)
+Phase 4: Generation (MD + TEX/PDF + DOCX + Report)
    ↓  [USER REVIEW]
 Phase 5: Library Update (Conditional)
 ```
