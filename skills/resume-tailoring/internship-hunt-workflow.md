@@ -48,7 +48,10 @@ a project config):
 
 ## Phase 2: Filter Matches
 
-1. **Age filter:** keep only rows where `age == "0d"`.
+1. **Age filter:** keep only rows where `age == "0d"`. If the last
+   `INTERNSHIP_HUNT_<date>.md` in the output directory is older than
+   yesterday, widen the filter to cover every day since that run (e.g. last
+   run two days ago → keep `0d` and `1d`), so skipped days aren't lost.
 2. **Location filter — US only.** Use judgment, not a strict regex, since
    the column is free text (e.g. `Chicago, IL`, `NYC`, `SF`, `Multiple
    Locations`, `Remote in USA`, `Vancouver, BC, Canada`, `London, UK`):
@@ -68,6 +71,21 @@ a project config):
    a matching filename before regenerating) so re-runs don't duplicate work
    on roles that are still `0d` because the repo hasn't refreshed yet.
 
+4. **Eligibility screen from the full JD.** Titles and the README's 🎓
+   flag miss a lot, so read each surviving posting before generating:
+   - Degree level: some "Software Engineer Intern" listings are PhD-only in
+     the body text.
+   - Graduation window: compare it to the user's expected date. If the
+     user has said their date is flexible, keep roles whose window is
+     nearby. Generate with a date inside the window and flag that in the
+     report.
+   - School-restricted programs (e.g. "students at University X only").
+   - Co-op terms that need a fall or spring semester off school.
+   - Class standing ("rising juniors/seniors only"), citizenship, dual-
+     citizenship bans, and clearance requirements.
+   Skip clear ineligibles and list them with the reason. Borderline fits
+   get listed separately so the user can opt in.
+
 ## Phase 3: Generate Resumes
 
 For the surviving set of matched internships:
@@ -77,6 +95,18 @@ For the surviving set of matched internships:
    isn't fetchable (blocked, requires login, etc.), fall back to using just
    `company + role + location` as a lightweight JD seed and proceed with
    reduced research depth — note this in the report, don't block on it.
+   Most ATS pages are JavaScript shells. Their public JSON endpoints return
+   the full JD without scraping:
+   - Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{board}/jobs/{id}`
+   - Ashby: `https://api.ashbyhq.com/posting-api/job-board/{org}` (find the job by id)
+   - Workday: `https://{tenant}.{wdN}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/job/{path}`
+     (same path as the public URL, after `/job/`)
+   - Eightfold (e.g. `explore.jobs.netflix.net`, `*.eightfold.ai`):
+     `https://{host}/api/apply/v2/jobs/{id}?domain={domain}`
+   - SmartRecruiters: `https://api.smartrecruiters.com/v1/companies/{co}/postings/{id}`
+   Record the real posting URL (not the Simplify redirect) for the apply
+   list, with tracking parameters (`fbclid`, `utm_*`, `gh_src`, etc.)
+   stripped.
 2. **Route by volume:**
    - 1-2 matches → run the normal **single-job workflow** (Phase 0 onward
      in `SKILL.md`) for each.
@@ -92,6 +122,13 @@ For the surviving set of matched internships:
 4. Output file naming: `Resume_<Company>_<Role>_<YYYY-MM-DD>.md` (plus
    DOCX/PDF per the usual Phase 4 generation), in the usual output
    location.
+
+### Ad-hoc postings
+
+If the user pastes a posting link during or after a run ("also do this
+<url>"), apply the same eligibility screen and generation to it. Add it to
+that day's output folder, rank it in the existing apply list, and renumber
+the list rather than starting a new report.
 
 ## Phase 4: Report
 
@@ -109,6 +146,13 @@ US-based matches: <N>
   ⚠ Skipped (already generated in a prior run): <Company> — <Role>
   ⚠ Reduced-research (JD page unreachable): <Company> — <Role>
 ```
+
+Then end with a **prioritized apply list**: every generated role ranked
+best-fit first. Rank on JD coverage, eligibility certainty, and value, and
+move roles with closing deadlines up. Each row gives the direct posting
+link (not the Simplify redirect), the resume file, and a one-line heads-up
+(fixed start dates, citizenship/clearance, transcript asks, deadlines).
+Put it both in the chat reply and in `INTERNSHIP_HUNT_<date>.md`.
 
 ## Scheduling the daily run
 

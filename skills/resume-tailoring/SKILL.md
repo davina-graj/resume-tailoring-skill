@@ -957,6 +957,27 @@ reference file's formatting:
    style+run-formatting the reference file's job titles had).
 5. Save as the normal `{Name}_{Company}_{Role}_Resume.docx` output.
 
+**Cloning prototype paragraphs instead of rebuilding styles:** a simpler,
+more faithful variant is to deep-copy existing paragraphs from the
+reference as prototypes (a role header with location, a header without
+one, a bullet, a blank spacer) and fill copies with new text. Find those
+prototypes **by content**, e.g. "the first paragraph after the line
+starting with `Experience`" or "the first `List Paragraph` bullet". Don't
+use hardcoded paragraph indices. Users edit their reference file between
+runs, and stale indices silently clone the wrong paragraphs: bullets come
+out as headers, and a bullet ends up repeated under every entry. Assert
+each prototype's expected shape (style name, run count) before using it.
+
+**Verify page fill after rendering.** For one-page resumes, export the PDF
+and check the page count and the last line's vertical position. On
+Windows with Word installed, COM gives both:
+`$d.ComputeStatistics(2)` gives pages, and
+`$d.Content.Characters.Last.Information(6)` gives points from the page
+top. Aim for the last line within ~40–60pt of the bottom margin. If the
+page is short, add the next-best-scoring bullets from the library; if it
+runs over, drop the lowest-scoring ones. Check for near-duplicate bullets
+(the same accomplishment worded two ways) before adding filler.
+
 **If no reference `.docx` is supplied and the user hasn't asked for a named
 alternative,** use the Jake's-layout default from 4.2 — don't apply this
 section's clone process at all. Don't ask the user to pick a template
